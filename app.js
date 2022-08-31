@@ -2,6 +2,7 @@ import express, { json } from 'express'
 import morgan from 'morgan'
 import 'dotenv/config'
 import appRoutes from './routes/app.routes'
+import database from './database'
 const app = express()
 app.use(json())
 app.use(morgan('dev'))
