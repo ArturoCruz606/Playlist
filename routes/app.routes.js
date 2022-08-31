@@ -2,42 +2,42 @@ import express from 'express'
 const router = express.Router()
 import Playlist from '../models/playlist.model'
 // let Playlist = [
-//     {
-//         "nombre": "lol",
-//         "descripcion": "a",
-//         "canciones": [
-//             {
-//                 "titulo": "veil",
-//                 "artista": "no se",
-//                 "album": "nu se",
-//                 "año": 2019
-//             },
-//             {
-//                 "titulo": "nose",
-//                 "artista": "no se",
-//                 "album": "nu se",
-//                 "año": 2000
-//             }
-//         ]
-//     },
-//     {
-//         "nombre": "ligoleyen",
-//         "descripcion": "aeiou",
-//         "canciones": [
-//             {
-//                 "titulo": "esetera",
-//                 "artista": "no se",
-//                 "album": "nu se",
-//                 "año": 2019
-//             },
-//             {
-//                 "titulo": "a",
-//                 "artista": "no se",
-//                 "album": "nu se",
-//                 "año": 2000
-//             }
-//         ]
-//     }
+    // {
+    //     "nombre": "lol",
+    //     "descripcion": "a",
+    //     "canciones": [
+    //         {
+    //             "titulo": "veil",
+    //             "artista": "no se",
+    //             "album": "nu se",
+    //             "año": 2019
+    //         },
+    //         {
+    //             "titulo": "nose",
+    //             "artista": "no se",
+    //             "album": "nu se",
+    //             "año": 2000
+    //         }
+    //     ]
+    // },
+    // {
+    //     "nombre": "ligoleyen",
+    //     "descripcion": "aeiou",
+    //     "canciones": [
+    //         {
+    //             "titulo": "esetera",
+    //             "artista": "no se",
+    //             "album": "nu se",
+    //             "año": 2019
+    //         },
+    //         {
+    //             "titulo": "a",
+    //             "artista": "no se",
+    //             "album": "nu se",
+    //             "año": 2000
+    //         }
+    //     ]
+    // }
 // ]
 
 router.get('/lists', async (request, response) => {
@@ -45,6 +45,7 @@ router.get('/lists', async (request, response) => {
         const lista = await Playlist.find()
         response.send(lista)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -55,6 +56,7 @@ router.get('/lists/:nombre', async (request, response) => {
         const lista = await Playlist.findOne({ nombre: nombrePlaylist })
         response.send(lista)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -65,6 +67,7 @@ router.post('/lists', async (request, response) => {
         await Playlist.create(playlist)
         response.status(201).send(playlist)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -77,6 +80,7 @@ router.put('/lists/:nombre', async (request, response) => {
         const listaResponse = await Playlist.findOne({ nombre: nombrePlaylist })
         response.send(listaResponse)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -86,6 +90,7 @@ router.delete('/lists/:nombre', async (request, response) => {
         await Playlist.findOneAndRemove( {nombre: nombrePlaylist} )
         response.status(204).send()
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -93,9 +98,10 @@ router.delete('/lists/:nombre', async (request, response) => {
 router.get('/lists/:nombre/songs', async (request, response) => {
     try {
         let nombrePlaylist = request.params.nombre
-        const lista = Playlist.findOne( {nombre: nombrePlaylist} )
+        const lista = await Playlist.findOne( {nombre: nombrePlaylist} )
         response.send(lista.canciones)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -105,9 +111,10 @@ router.get('/lists/:nombre/songs/:titulo', async (request, response) => {
         let nombrePlaylist = request.params.nombre
         let tituloCancion = request.params.titulo
         const lista = await Playlist.findOne( {nombre: nombrePlaylist} )
-        const cancion = await lista.canciones.find(x => x.nombre == nombrePlaylist)
+        const cancion = lista.canciones.find(x => x.titulo == tituloCancion)
         response.send(cancion)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -121,6 +128,7 @@ router.post('/lists/:nombre/songs', async (request, response) => {
         await Playlist.findOneAndUpdate({nombre: nombrePlaylist}, lista)
         response.status(201).send(lista)
     } catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
@@ -130,6 +138,7 @@ router.put('/lists/:nombre/songs/:titulo', async (request, response) => {
         let nombrePlaylist = request.params.nombre
         let tituloCancion = request.params.titulo
     }catch (err) {
+        console.log(err)
         response.status(500).send(err)
     }
 })
