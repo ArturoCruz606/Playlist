@@ -137,6 +137,11 @@ router.put('/lists/:nombre/songs/:titulo', async (request, response) => {
     try{
         let nombrePlaylist = request.params.nombre
         let tituloCancion = request.params.titulo
+        let cancionUpdate = request.body
+        const lista = await Playlist.findOne( {nombre: nombrePlaylist} )
+        const cancion = lista.canciones.find(x => x.titulo == tituloCancion)
+        cancion
+        response.status(204).send()
     }catch (err) {
         console.log(err)
         response.status(500).send(err)
