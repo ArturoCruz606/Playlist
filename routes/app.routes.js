@@ -140,16 +140,29 @@ router.put('/lists/:nombre/songs/:titulo', async (request, response) => {
         let cancionUpdate = request.body
         const lista = await Playlist.findOne( {nombre: nombrePlaylist} )
         const cancion = lista.canciones.find(x => x.titulo == tituloCancion)
-        cancion
-        response.status(204).send()
+        cancion.titulo = cancionUpdate.titulo
+        cancion.artista = cancionUpdate.artista
+        cancion.album = cancionUpdate.album
+        cancion.año = cancionUpdate.año
+        await Playlist.findOneAndUpdate( {nombre: nombrePlaylist}, lista )
+        const listaResponse = await Playlist.findOne( {nombre: nombrePlaylist} )
+        response.status(204).send(listaResponse)
     }catch (err) {
         console.log(err)
         response.status(500).send(err)
     }
 })
 
-router.delete('/lists/:nombre/songs/:titulo', (request, response) => {
-    
+router.delete('/lists/:nombre/songs/:titulo', async (request, response) => {
+        let nombrePlaylist = request.params.nombre
+        let tituloCancion = request.params.titulo
+        const lista = await Playlist.findOne( {nombre: nombrePlaylist} )
+        const cancion = lista.canciones.find(x => x.titulo == tituloCancion)
+        let indice = lista.canciones.indexOf(cancion)
+        lista.canciones.splice(indice, 1)
+        await Playlist.findOneAndUpdate( {nombre: nombrePlaylist}, lista )
+        const listaResponse = await Playlist.findOne( {nombre: nombrePlaylist} )
+        response.status(204).send(listaResponse)
 })
 
 export default router
